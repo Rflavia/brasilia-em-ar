@@ -1,7 +1,7 @@
 export type ResultColor = "RED" | "BLACK" | "WHITE";
 
 export interface ResultItem {
-  id: number;
+  id: string;
   time: string;
   number: number;
   color: ResultColor;
@@ -28,7 +28,7 @@ export interface ResultsSnapshot {
   whiteOccurrences: WhiteOccurrence[];
 }
 
-export type DatasetSample = "100" | "500" | "1000" | "2000" | "all";
+export type DatasetSample = "100" | "500" | "1000" | "2000";
 
 export interface AnalysisOutput {
   id: string;
