@@ -129,9 +129,7 @@ function AnalysisPage() {
       lastUpdate={data.lastUpdate}
     >
 
-      <div className="mx-auto max-w-[1180px] px-5 pb-28 md:px-10 lg:px-12">
-
-        <AnalysisPanel
+    <div className="mx-auto w-full px-5 pb-28 pt-10 sm:px-6 md:px-8 md:pt-12 lg:px-10 lg:pt-14 xl:px-12 2xl:px-14">        <AnalysisPanel
           totalResults={data.total}
         />
 

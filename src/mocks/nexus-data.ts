@@ -25,6 +25,7 @@ export const MOCK_SNAPSHOT: ResultsSnapshot = {
     { id: 13, time: "13:35:32", number: 5, color: "RED" },
   ],
   whiteTotal: 27,
+  whiteToday: 0,
   whiteAverageInterval: 30.2,
   whiteOccurrences: [
     { time: "13:21:02", rounds: 31 },

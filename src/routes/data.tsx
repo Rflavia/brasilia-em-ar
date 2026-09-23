@@ -1,34 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { Radio } from "lucide-react";
 
 import { AppShell } from "@/components/nexus/app-shell";
-import { Distribution } from "@/components/nexus/distribution";
-import { SectionLabel } from "@/components/nexus/section-label";
 
 import { resultsService } from "@/services/results-service";
 
-import type { ResultsSnapshot } from "@/types/nexus";
+import type {
+  ResultColor,
+  ResultsSnapshot,
+} from "@/types/nexus";
 
 
 export const Route = createFileRoute("/data")({
   head: () => ({
     meta: [
       {
-        title: "Dados — BOOT",
+        title: "Resultados — BOOT",
       },
       {
         name: "description",
-        content:
-          "Volume, distribuição, fonte e detalhes de atualização do conjunto de dados.",
+        content: "Resultados coletados em tempo real.",
       },
       {
         property: "og:title",
-        content: "Dados — NEXUS",
+        content: "Resultados — BOOT",
       },
       {
         property: "og:description",
-        content:
-          "Volume, distribuição, fonte e detalhes de atualização do conjunto de dados.",
+        content: "Resultados coletados em tempo real.",
       },
       {
         property: "og:type",
@@ -45,10 +45,21 @@ export const Route = createFileRoute("/data")({
 });
 
 
+type Resultado = {
+  id: number;
+  time: string;
+  number: number;
+  color: ResultColor;
+};
+
+
 function DataPage() {
 
   const [data, setData] =
     useState<ResultsSnapshot | null>(null);
+
+  const [resultados, setResultados] =
+    useState<Resultado[]>([]);
 
 
   useEffect(() => {
@@ -60,17 +71,31 @@ function DataPage() {
 
       try {
 
-        const snapshot =
-          await resultsService.getSnapshot();
+        const [
+          snapshot,
+          historico,
+        ] = await Promise.all([
+          resultsService.getSnapshot(),
+          resultsService.getResults(500),
+        ]);
 
-        if (ativo) {
-          setData(snapshot);
+
+        if (!ativo) {
+          return;
         }
+
+
+        setData(snapshot);
+
+        setResultados(
+          historico as Resultado[]
+        );
+
 
       } catch (erro) {
 
         console.error(
-          "Erro ao carregar dados:",
+          "Erro ao carregar resultados:",
           erro
         );
 
@@ -79,16 +104,13 @@ function DataPage() {
     }
 
 
-    // Carrega imediatamente
     carregarDados();
 
 
-    // Atualiza automaticamente a cada 5 segundos
-    const intervalo = setInterval(() => {
-
-      carregarDados();
-
-    }, 5000);
+    const intervalo = setInterval(
+      carregarDados,
+      5000
+    );
 
 
     return () => {
@@ -102,16 +124,74 @@ function DataPage() {
   }, []);
 
 
+  const recentes = useMemo(() => {
+
+    return resultados.slice(0, 10);
+
+  }, [resultados]);
+
+
+  const ultimos20 = useMemo(() => {
+
+    return resultados.slice(0, 20);
+
+  }, [resultados]);
+
+
+  const distribuicao = useMemo(() => {
+
+    const total = resultados.length;
+
+    const vermelho = resultados.filter(
+      (item) => item.color === "RED"
+    ).length;
+
+    const preto = resultados.filter(
+      (item) => item.color === "BLACK"
+    ).length;
+
+    const branco = resultados.filter(
+      (item) => item.color === "WHITE"
+    ).length;
+
+
+    function percentual(valor: number) {
+
+      if (total === 0) {
+        return 0;
+      }
+
+      return (valor / total) * 100;
+
+    }
+
+
+    return {
+      total,
+      vermelho,
+      preto,
+      branco,
+      percentualVermelho:
+        percentual(vermelho),
+      percentualPreto:
+        percentual(preto),
+      percentualBranco:
+        percentual(branco),
+    };
+
+  }, [resultados]);
+
+
   if (!data) {
 
     return (
 
-      <AppShell title="Dados">
+      <AppShell title="Resultados">
 
-        <div className="flex min-h-[400px] items-center justify-center">
+        <div className="flex min-h-[500px] items-center justify-center">
 
           <p className="text-sm text-muted-foreground">
-            Carregando dados...
+            Carregando resultados...
           </p>
 
         </div>
@@ -126,135 +206,615 @@ function DataPage() {
   return (
 
     <AppShell
-      title="Dados"
+      title="Resultados"
       lastUpdate={data.lastUpdate}
     >
 
-      <div className="mx-auto max-w-[1180px] px-5 pb-28 pt-16 md:px-10 lg:px-12">
+    <div className="mx-auto w-full px-5 pb-24 pt-10 sm:px-6 md:px-8 md:pt-12 lg:px-10 lg:pt-14 xl:px-12 2xl:px-14">
+
+        {/* CABEÇALHO */}
+
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+
+          <div className="flex items-center gap-4">
+
+            <div className="flex size-11 items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10">
+
+              <Radio className="size-5 text-red-500" />
+
+            </div>
 
 
-        <div className="max-w-2xl">
+            <div>
 
-          <SectionLabel>
-            Conjunto de dados
-          </SectionLabel>
+              <h1 className="font-display text-3xl font-semibold">
+                Resultados ao Vivo
+              </h1>
 
-          <h2 className="mt-5 font-display text-5xl font-light">
-            Dados coletados.
-          </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Últimas rodadas coletadas em tempo real.
+              </p>
 
-          <p className="mt-5 text-sm text-muted-foreground">
-            Volume atual do conjunto de dados,
-            fonte e distribuição dos resultados.
-          </p>
+            </div>
+
+          </div>
+
+
+          <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-xs">
+
+            <span className="relative flex size-2">
+
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-live opacity-50" />
+
+              <span className="relative inline-flex size-2 rounded-full bg-live" />
+
+            </span>
+
+            <span className="text-live">
+              Atualizando em tempo real
+            </span>
+
+          </div>
 
         </div>
 
 
-        <div className="mt-20 grid border-y border-border lg:grid-cols-2">
+        {/* ÚLTIMAS RODADAS */}
+
+        <div className="mt-10 rounded-2xl border border-border bg-card p-5">
+
+          <div className="grid grid-cols-5 gap-3 sm:grid-cols-10">
+
+            {recentes.map((item) => (
+
+              <ResultadoCard
+                key={item.id}
+                resultado={item}
+              />
+
+            ))}
+
+          </div>
+
+        </div>
 
 
-          <div className="py-12 lg:border-r lg:border-border lg:pr-14">
+        {/* PARTE INFERIOR */}
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
 
 
-            <p className="font-display text-7xl font-light tabular-nums">
+          {/* DISTRIBUIÇÃO DAS CORES */}
 
-              {data.total.toLocaleString("pt-BR")}
+          <div className="rounded-2xl border border-border bg-card p-6">
 
+            <h2 className="font-display text-lg font-semibold">
+              Distribuição das Cores
+            </h2>
+
+            <p className="mt-1 text-xs text-muted-foreground">
+              Últimos {distribuicao.total} resultados carregados
             </p>
 
 
-            <p className="mt-3 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-              Resultados disponíveis
+            <div className="mt-8 flex flex-col items-center gap-10 sm:flex-row sm:justify-center">
+
+
+              {/* GRÁFICO DE ROSCA */}
+
+              <GraficoRosca
+                total={distribuicao.total}
+                vermelho={distribuicao.percentualVermelho}
+                preto={distribuicao.percentualPreto}
+                branco={distribuicao.percentualBranco}
+              />
+
+
+              {/* LEGENDA */}
+
+              <div className="w-full max-w-[260px] space-y-5">
+
+                <LegendaCor
+                  nome="Vermelho"
+                  quantidade={distribuicao.vermelho}
+                  percentual={distribuicao.percentualVermelho}
+                  cor="RED"
+                />
+
+                <LegendaCor
+                  nome="Preto"
+                  quantidade={distribuicao.preto}
+                  percentual={distribuicao.percentualPreto}
+                  cor="BLACK"
+                />
+
+                <LegendaCor
+                  nome="Branco"
+                  quantidade={distribuicao.branco}
+                  percentual={distribuicao.percentualBranco}
+                  cor="WHITE"
+                />
+
+              </div>
+
+            </div>
+
+
+            <div className="mt-8 border-t border-border pt-5">
+
+              <div className="flex items-center justify-between text-xs">
+
+                <span className="text-muted-foreground">
+                  Banco completo
+                </span>
+
+                <span className="font-mono">
+                  {data.total.toLocaleString("pt-BR")} resultados
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          {/* ÚLTIMOS 20 */}
+
+          <div className="rounded-2xl border border-border bg-card p-6">
+
+            <h2 className="font-display text-lg font-semibold">
+              Últimos 20 resultados
+            </h2>
+
+            <p className="mt-1 text-xs text-muted-foreground">
+              Sequência mais recente registrada pelo sistema
             </p>
 
 
-            <dl className="mt-14 space-y-5 text-xs">
+            <div className="mt-8 grid grid-cols-5 gap-4 sm:grid-cols-10">
+
+              {ultimos20.map((item) => (
+
+                <ResultadoBolinha
+                  key={item.id}
+                  resultado={item}
+                />
+
+              ))}
+
+            </div>
 
 
-              <div className="flex justify-between border-b border-border/70 pb-5">
+            <div className="mt-8 border-t border-border pt-5">
 
-                <dt className="text-muted-foreground">
-                  Fonte
-                </dt>
+              <div className="flex items-center justify-between text-xs">
 
-                <dd>
-                  Banco de resultados
-                </dd>
-
-              </div>
-
-
-              <div className="flex justify-between border-b border-border/70 pb-5">
-
-                <dt className="text-muted-foreground">
-                  Monitoramento
-                </dt>
-
-                <dd className="flex items-center gap-2">
-
-                  <span className="size-1.5 rounded-full bg-live" />
-
-                  Ativo
-
-                </dd>
-
-              </div>
-
-
-              <div className="flex justify-between border-b border-border/70 pb-5">
-
-                <dt className="text-muted-foreground">
-                  Desde
-                </dt>
-
-                <dd className="font-mono">
-                  {data.since}
-                </dd>
-
-              </div>
-
-
-              <div className="flex justify-between">
-
-                <dt className="text-muted-foreground">
+                <span className="text-muted-foreground">
                   Última atualização
-                </dt>
+                </span>
 
-                <dd className="font-mono">
-                  {data.lastUpdate}
-                </dd>
+                <span className="font-mono">
+                  {formatarDataHora(data.lastUpdate)}
+                </span>
 
               </div>
 
-
-            </dl>
-
-
-          </div>
-
-
-          <div className="border-t border-border py-12 lg:border-t-0 lg:pl-14">
-
-            <Distribution
-              items={data.distribution}
-            />
+            </div>
 
           </div>
 
 
         </div>
-
-
-        <p className="mt-7 text-[10px] text-muted-foreground">
-          Dados obtidos em tempo real através da API do NEXUS.
-        </p>
-
 
       </div>
 
     </AppShell>
 
+  );
+
+}
+
+
+/* =========================================================
+   GRÁFICO DE ROSCA
+========================================================= */
+
+function GraficoRosca({
+  total,
+  vermelho,
+  preto,
+  branco,
+}: {
+  total: number;
+  vermelho: number;
+  preto: number;
+  branco: number;
+}) {
+
+  const tamanho = 190;
+  const centro = tamanho / 2;
+  const raio = 70;
+
+  const circunferencia =
+    2 * Math.PI * raio;
+
+
+  const tamanhoVermelho =
+    (vermelho / 100) * circunferencia;
+
+  const tamanhoPreto =
+    (preto / 100) * circunferencia;
+
+  const tamanhoBranco =
+    (branco / 100) * circunferencia;
+
+
+  const inicioVermelho = 0;
+
+  const inicioPreto =
+    tamanhoVermelho;
+
+  const inicioBranco =
+    tamanhoVermelho +
+    tamanhoPreto;
+
+
+  return (
+
+    <div className="relative flex size-[190px] shrink-0 items-center justify-center">
+
+      <svg
+        width={tamanho}
+        height={tamanho}
+        viewBox={`0 0 ${tamanho} ${tamanho}`}
+        className="-rotate-90"
+      >
+
+        {/* FUNDO */}
+
+        <circle
+          cx={centro}
+          cy={centro}
+          r={raio}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="22"
+          className="text-secondary"
+        />
+
+
+        {/* VERMELHO */}
+
+        {tamanhoVermelho > 0 && (
+
+          <circle
+            cx={centro}
+            cy={centro}
+            r={raio}
+            fill="none"
+            stroke="#ff2d3d"
+            strokeWidth="22"
+            strokeDasharray={
+              `${tamanhoVermelho} ${circunferencia - tamanhoVermelho}`
+            }
+            strokeDashoffset={
+              -inicioVermelho
+            }
+          />
+
+        )}
+
+
+        {/* PRETO */}
+
+        {tamanhoPreto > 0 && (
+
+          <circle
+            cx={centro}
+            cy={centro}
+            r={raio}
+            fill="none"
+            stroke="#050505"
+            strokeWidth="22"
+            strokeDasharray={
+              `${tamanhoPreto} ${circunferencia - tamanhoPreto}`
+            }
+            strokeDashoffset={
+              -inicioPreto
+            }
+          />
+
+        )}
+
+
+        {/* BRANCO */}
+
+        {tamanhoBranco > 0 && (
+
+          <circle
+            cx={centro}
+            cy={centro}
+            r={raio}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="22"
+            strokeDasharray={
+              `${tamanhoBranco} ${circunferencia - tamanhoBranco}`
+            }
+            strokeDashoffset={
+              -inicioBranco
+            }
+          />
+
+        )}
+
+      </svg>
+
+
+      {/* TOTAL NO CENTRO */}
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+
+        <span className="font-display text-3xl font-semibold tabular-nums">
+          {total}
+        </span>
+
+        <span className="mt-1 text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+          rodadas
+        </span>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+
+/* =========================================================
+   LEGENDA DO GRÁFICO
+========================================================= */
+
+function LegendaCor({
+  nome,
+  quantidade,
+  percentual,
+  cor,
+}: {
+  nome: string;
+  quantidade: number;
+  percentual: number;
+  cor: ResultColor;
+}) {
+
+  return (
+
+    <div className="flex items-center justify-between gap-8">
+
+      <div className="flex items-center gap-3">
+
+        <span
+          className={`
+            size-3
+            shrink-0
+            rounded-full
+            ${classeBolinha(cor)}
+          `}
+        />
+
+        <span className="text-sm">
+          {nome}
+        </span>
+
+      </div>
+
+
+      <div className="flex items-center gap-4 font-mono text-xs">
+
+        <span className="text-muted-foreground">
+          {quantidade}
+        </span>
+
+        <span className="w-14 text-right">
+          {percentual.toFixed(1)}%
+        </span>
+
+      </div>
+
+    </div>
+
+  );
+
+}
+
+
+/* =========================================================
+   CARDS SUPERIORES
+========================================================= */
+
+function ResultadoCard({
+  resultado,
+}: {
+  resultado: Resultado;
+}) {
+
+  return (
+
+    <div className="text-center">
+
+      <div
+        className={`
+          flex
+          aspect-square
+          items-center
+          justify-center
+          rounded-xl
+          border
+          font-display
+          text-xl
+          font-semibold
+          ${classeResultado(resultado.color)}
+        `}
+      >
+
+        {resultado.number}
+
+      </div>
+
+
+      <p className="mt-2 font-mono text-[10px] text-muted-foreground">
+
+        {formatarHorario(resultado.time)}
+
+      </p>
+
+    </div>
+
+  );
+
+}
+
+
+/* =========================================================
+   BOLINHAS DOS ÚLTIMOS 20
+========================================================= */
+
+function ResultadoBolinha({
+  resultado,
+}: {
+  resultado: Resultado;
+}) {
+
+  return (
+
+    <div
+      title={`${resultado.number} — ${formatarHorario(
+        resultado.time
+      )}`}
+      className={`
+        flex
+        aspect-square
+        items-center
+        justify-center
+        rounded-full
+        border
+        text-xs
+        font-semibold
+        ${classeResultado(resultado.color)}
+      `}
+    >
+
+      {resultado.number}
+
+    </div>
+
+  );
+
+}
+
+
+/* =========================================================
+   CORES
+========================================================= */
+
+function classeResultado(
+  cor: ResultColor
+) {
+
+  if (cor === "RED") {
+
+    return "border-red-500/30 bg-red-500 text-white";
+
+  }
+
+  if (cor === "WHITE") {
+
+    return "border-white/50 bg-white text-black";
+
+  }
+
+  return "border-white/10 bg-black text-white";
+
+}
+
+
+function classeBolinha(
+  cor: ResultColor
+) {
+
+  if (cor === "RED") {
+    return "bg-red-500";
+  }
+
+  if (cor === "WHITE") {
+    return "border border-border bg-white";
+  }
+
+  return "border-2 border-slate-300 bg-black shadow-[0_0_0_1px_rgba(255,255,255,0.12)]";
+
+}
+
+
+/* =========================================================
+   FORMATAÇÃO DE HORÁRIO
+========================================================= */
+
+function formatarHorario(
+  horario: string
+) {
+
+  if (!horario) {
+    return "--:--";
+  }
+
+
+  const encontrado =
+    horario.match(
+      /(\d{2}):(\d{2})(?::\d{2})?/
+    );
+
+
+  if (encontrado) {
+
+    return `${encontrado[1]}:${encontrado[2]}`;
+
+  }
+
+
+  return horario;
+
+}
+
+
+function formatarDataHora(
+  horario: string
+) {
+
+  if (!horario) {
+    return "—";
+  }
+
+
+  const encontrado =
+    horario.match(
+      /(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/
+    );
+
+
+  if (!encontrado) {
+    return horario;
+  }
+
+
+  return (
+    `${encontrado[3]}/` +
+    `${encontrado[2]}/` +
+    `${encontrado[1]} ` +
+    `${encontrado[4]}:` +
+    `${encontrado[5]}:` +
+    `${encontrado[6]}`
   );
 
 }

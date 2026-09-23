@@ -1,18 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import {
-  Activity,
-  ChartNoAxesCombined,
-  Database,
-  History,
-} from "lucide-react";
+import { Menu, X, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
+
 const navItems = [
-  { to: "/overview" as const, label: "Visão geral", icon: Activity },
-  { to: "/history" as const, label: "Histórico", icon: History },
-  { to: "/analysis" as const, label: "Análise", icon: ChartNoAxesCombined },
-  { to: "/data" as const, label: "Dados", icon: Database },
+  { to: "/overview" as const, label: "Início" },
+  { to: "/analysis" as const, label: "Análise" },
+  { to: "/history" as const, label: "Histórico" },
+  { to: "/data" as const, label: "Resultados" },
 ];
+
 
 export function AppShell({
   title,
@@ -23,128 +21,422 @@ export function AppShell({
   lastUpdate?: string;
   children: ReactNode;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
+
+  const lastScrollY = useRef(0);
+
+
+  /* =====================================================
+      CONTROLE DA NAVBAR AO ROLAR A PÁGINA
+  ===================================================== */
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 20) {
+        setHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY.current) {
+        setHeaderVisible(false);
+        setMenuOpen(false);
+      } else if (currentScrollY < lastScrollY.current) {
+        setHeaderVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-background text-foreground">
 
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-48 border-r border-border bg-background lg:flex lg:flex-col">
+      {/* =====================================================
+          CABEÇALHO
+      ===================================================== */}
 
-        <div className="border-b border-border px-7 py-7">
+      <header
+        className={`
+          sticky
+          top-0
+          z-50
+          h-20
+          border-b
+          border-border/40
+          bg-background/70
+          backdrop-blur-2xl
+          backdrop-saturate-150
+          transition-all
+          duration-500
+          ease-out
+          ${
+            headerVisible
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-full opacity-0"
+          }
+        `}
+      >
+        <div
+          className="
+            mx-auto
+            grid
+            h-20
+            w-full
+            grid-cols-[1fr_auto_1fr]
+            items-center
+            px-5
+            sm:px-6
+            md:px-8
+            lg:px-10
+            xl:px-12
+            2xl:px-14
+          "
+        >
 
-          <p className="font-display text-[15px] font-semibold tracking-[0.18em]">
-            ANÁLISE
-          </p>
+          {/* =================================================
+              LOGO
+          ================================================= */}
 
-          <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            Data Intelligence
-          </p>
+          <div className="flex justify-start">
+            <Link
+              to="/overview"
+              className="group flex items-center"
+              onClick={() => setMenuOpen(false)}
+            >
+              <div
+                className="
+                  flex
+                  items-center
+                  font-display
+                  text-[28px]
+                  font-black
+                  tracking-[0.07em]
+                  sm:text-[30px]
+                  lg:text-[32px]
+                "
+              >
+                <span className="text-foreground">
+                  B
+                </span>
+
+                <span className="text-primary">
+                  O
+                </span>
+
+                <span className="text-foreground">
+                  OT
+                </span>
+              </div>
+            </Link>
+          </div>
+
+
+          {/* =================================================
+              NAVEGAÇÃO DESKTOP
+          ================================================= */}
+
+          <nav
+            className="
+              hidden
+              items-center
+              justify-center
+              gap-1
+              md:flex
+              lg:gap-2
+            "
+            aria-label="Navegação principal"
+          >
+            {navItems.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className="
+                  rounded-xl
+                  px-3
+                  py-2.5
+                  text-[10px]
+                  font-medium
+                  uppercase
+                  tracking-[0.10em]
+                  text-muted-foreground
+                  transition-all
+                  duration-200
+                  hover:bg-secondary/70
+                  hover:text-foreground
+                  lg:px-5
+                  lg:py-3
+                  lg:text-[11px]
+                "
+                activeProps={{
+                  className:
+                    "bg-primary/40 text-white shadow-[0_0_24px_rgba(49,92,255,0.18)]",
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+
+          {/* =================================================
+              USUÁRIO DESKTOP
+          ================================================= */}
+
+          <div
+            className="
+              hidden
+              items-center
+              justify-end
+              md:flex
+            "
+          >
+            <Link
+              to="/profile"
+              className="
+                group
+                flex
+                size-11
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-border/60
+                bg-secondary/30
+                text-muted-foreground
+                transition-all
+                duration-300
+                hover:border-primary/40
+                hover:bg-primary/10
+                hover:text-primary
+              "
+              aria-label="Abrir perfil"
+            >
+              <User
+                className="
+                  size-5
+                  transition-transform
+                  duration-300
+                  group-hover:scale-105
+                "
+              />
+            </Link>
+          </div>
+
+
+          {/* =================================================
+              BOTÃO MOBILE / TABLET
+          ================================================= */}
+
+          <div className="flex justify-end md:hidden">
+            <button
+              type="button"
+              className="
+                flex
+                size-10
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-border/70
+                bg-background/40
+                text-muted-foreground
+                transition-all
+                duration-200
+                hover:bg-secondary
+                hover:text-foreground
+              "
+              onClick={() =>
+                setMenuOpen((valor) => !valor)
+              }
+              aria-label={
+                menuOpen
+                  ? "Fechar menu"
+                  : "Abrir menu"
+              }
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </button>
+          </div>
 
         </div>
 
-        <nav
-          className="flex flex-1 flex-col gap-1 px-3 py-8"
-          aria-label="Navegação principal"
-        >
 
-          {navItems.map(({ to, label, icon: Icon }) => (
+        {/* =====================================================
+            MENU MOBILE
+        ===================================================== */}
 
-            <Link
-              key={to}
-              to={to}
-              className="group flex h-10 items-center gap-3 border-l border-transparent px-4 text-xs text-muted-foreground transition-colors duration-200 hover:text-foreground"
-              activeProps={{
-                className:
-                  "border-primary text-foreground bg-secondary",
-              }}
+        {menuOpen && (
+          <div
+            className="
+              border-t
+              border-border/40
+              bg-background/90
+              backdrop-blur-2xl
+              md:hidden
+            "
+          >
+            <nav
+              className="
+                mx-auto
+                flex
+                w-full
+                flex-col
+                gap-2
+                px-5
+                py-5
+                sm:px-6
+              "
+              aria-label="Navegação mobile"
             >
 
-              <Icon
-                aria-hidden="true"
-                className="size-4 stroke-[1.4]"
-              />
+              {/* LINKS MOBILE */}
 
-              {label}
+              {navItems.map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
+                  className="
+                    rounded-xl
+                    px-4
+                    py-4
+                    text-xs
+                    font-medium
+                    uppercase
+                    tracking-[0.14em]
+                    text-muted-foreground
+                    transition-all
+                    duration-200
+                    hover:bg-secondary
+                    hover:text-foreground
+                  "
+                  activeProps={{
+                    className:
+                      "bg-primary/40 text-white shadow-[0_0_20px_rgba(49,92,255,0.16)]",
+                  }}
+                >
+                  {label}
+                </Link>
+              ))}
 
-            </Link>
 
-          ))}
+              {/* =================================================
+                  USUÁRIO MOBILE
+              ================================================= */}
 
-        </nav>
+              <div
+                className="
+                  mt-3
+                  border-t
+                  border-border/60
+                  pt-5
+                "
+              >
+                <Link
+                  to="/profile"
+                  onClick={() =>
+                    setMenuOpen(false)
+                  }
+                  className="
+                    flex
+                    w-full
+                    items-center
+                    gap-3
+                    rounded-xl
+                    px-4
+                    py-3
+                    text-muted-foreground
+                    transition-all
+                    duration-200
+                    hover:bg-secondary
+                    hover:text-foreground
+                  "
+                  aria-label="Abrir perfil"
+                >
+                  <div
+                    className="
+                      flex
+                      size-10
+                      shrink-0
+                      items-center
+                      justify-center
+                      rounded-full
+                      border
+                      border-border/60
+                      bg-secondary/30
+                    "
+                  >
+                    <User className="size-5" />
+                  </div>
 
-      </aside>
+                  <div className="text-left">
+                    <p
+                      className="
+                        text-[10px]
+                        font-semibold
+                        uppercase
+                        tracking-[0.12em]
+                        text-foreground
+                      "
+                    >
+                      Usuário
+                    </p>
 
+                    <p
+                      className="
+                        mt-0.5
+                        text-[9px]
+                        text-muted-foreground
+                      "
+                    >
+                      Acessar perfil
+                    </p>
+                  </div>
+                </Link>
+              </div>
 
-      <div className="lg:pl-48">
-
-        <header className="sticky top-0 z-30 flex h-18 items-center justify-between border-b border-border bg-background/95 px-5 backdrop-blur-sm md:px-10 lg:px-12">
-
-          <div className="flex items-center gap-5">
-
-            <span className="font-display text-xs font-semibold tracking-[0.16em] lg:hidden">
-              ANÁLISE
-            </span>
-
-            <h1 className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              {title}
-            </h1>
-
+            </nav>
           </div>
+        )}
+
+      </header>
 
 
-          <div className="flex items-center gap-5 text-[10px] uppercase tracking-[0.12em]">
+      {/* =====================================================
+          CONTEÚDO
+      ===================================================== */}
 
-            <span className="flex items-center gap-2 text-live">
-
-              <span className="live-dot size-1.5 rounded-full bg-live" />
-
-              Ao vivo
-
-            </span>
-
-            <span className="hidden text-muted-foreground sm:inline">
-              Última atualização
-            </span>
-
-            <span className="font-mono text-xs text-foreground">
-              {lastUpdate || "--:--:--"}
-            </span>
-
-          </div>
-
-        </header>
-
-
-        <main>
+      <main className="w-full overflow-x-hidden">
+        <div className="page-enter">
           {children}
-        </main>
+        </div>
+      </main>
 
 
-        <nav
-          className="fixed inset-x-0 bottom-0 z-50 flex h-16 items-center justify-around border-t border-border bg-background lg:hidden"
-          aria-label="Navegação móvel"
-        >
+      {/* =====================================================
+          ACESSIBILIDADE
+      ===================================================== */}
 
-          {navItems.map(({ to, label, icon: Icon }) => (
-
-            <Link
-              key={to}
-              to={to}
-              className="flex min-w-16 flex-col items-center gap-1.5 text-[9px] uppercase tracking-[0.08em] text-muted-foreground"
-              activeProps={{
-                className: "text-foreground",
-              }}
-            >
-
-              <Icon className="size-4 stroke-[1.5]" />
-
-              {label}
-
-            </Link>
-
-          ))}
-
-        </nav>
-
-      </div>
+      <span className="sr-only">
+        {title}
+        {lastUpdate}
+      </span>
 
     </div>
   );

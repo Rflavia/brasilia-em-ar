@@ -1,7 +1,7 @@
 export type ResultColor = "RED" | "BLACK" | "WHITE";
 
 export interface ResultItem {
-  id: string;
+  id: number;
   time: string;
   number: number;
   color: ResultColor;
@@ -24,6 +24,7 @@ export interface ResultsSnapshot {
   distribution: DistributionItem[];
   recent: ResultItem[];
   whiteTotal: number;
+  whiteToday: number;
   whiteAverageInterval: number;
   whiteOccurrences: WhiteOccurrence[];
 }

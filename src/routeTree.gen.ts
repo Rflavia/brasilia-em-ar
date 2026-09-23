@@ -14,6 +14,7 @@ import { Route as AnalysisRouteImport } from './routes/analysis'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as OverviewRouteImport } from './routes/overview'
+import { Route as ProfileRouteImport } from './routes/profile'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const OverviewRoute = OverviewRouteImport.update({
   path: '/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/data': typeof DataRoute
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
+  '/profile': typeof ProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/data': typeof DataRoute
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
+  '/profile': typeof ProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,21 @@ export interface FileRoutesById {
   '/data': typeof DataRoute
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
+  '/profile': typeof ProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analysis' | '/data' | '/history' | '/overview'
+  fullPaths: '/' | '/analysis' | '/data' | '/history' | '/overview' | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analysis' | '/data' | '/history' | '/overview'
-  id: '__root__' | '/' | '/analysis' | '/data' | '/history' | '/overview'
+  to: '/' | '/analysis' | '/data' | '/history' | '/overview' | '/profile'
+  id:
+    | '__root__'
+    | '/'
+    | '/analysis'
+    | '/data'
+    | '/history'
+    | '/overview'
+    | '/profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +93,7 @@ export interface RootRouteChildren {
   DataRoute: typeof DataRoute
   HistoryRoute: typeof HistoryRoute
   OverviewRoute: typeof OverviewRoute
+  ProfileRoute: typeof ProfileRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +149,7 @@ const rootRouteChildren: RootRouteChildren = {
   DataRoute: DataRoute,
   HistoryRoute: HistoryRoute,
   OverviewRoute: OverviewRoute,
+  ProfileRoute: ProfileRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
