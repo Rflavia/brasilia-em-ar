@@ -396,40 +396,87 @@ function HistoryPage() {
         ===================================================== */}
 
         <section className="mb-12">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
-          <div className="flex items-start gap-4">
+            {/* TÍTULO */}
 
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
+            <div className="flex items-start gap-4">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
+                <History
+                  className="size-6 text-primary"
+                  strokeWidth={1.8}
+                />
+              </div>
 
-              <History
-                className="size-6 text-primary"
-                strokeWidth={1.8}
-              />
+              <div>
+                <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                  Histórico de Análises
+                </h1>
 
+                <p className="mt-2 text-sm leading-6 text-muted-foreground md:text-base">
+                  Acompanhe o desempenho das análises anteriores.
+                </p>
+              </div>
             </div>
 
 
-            <div>
+            {/* RESUMO */}
 
-              <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+            <div className="flex flex-wrap items-stretch gap-3">
 
-                Histórico de Análises
+              {/* TOTAL */}
 
-              </h1>
+              <div className="min-w-[120px] rounded-xl border border-border bg-card px-4 py-3">
+                <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Análises
+                </p>
+
+                <p className="mt-1 font-display text-2xl font-semibold text-foreground">
+                  {totalAnalises}
+                </p>
+              </div>
 
 
-              <p className="mt-2 text-sm leading-6 text-muted-foreground md:text-base">
+              {/* ACERTOS */}
 
-                Acompanhe o desempenho das análises anteriores.
+              <div className="min-w-[135px] rounded-xl border border-border bg-card px-4 py-3">
+                <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Acertos
+                </p>
 
-              </p>
+                <div className="mt-1 flex items-baseline gap-2">
+                  <p className="font-display text-2xl font-semibold text-live">
+                    {totalAcertos}
+                  </p>
+
+                  <p className="text-[10px] font-medium text-live">
+                    ({percentualAcertos.toFixed(1)}%)
+                  </p>
+                </div>
+              </div>
+
+
+              {/* ERROS */}
+
+              <div className="min-w-[135px] rounded-xl border border-border bg-card px-4 py-3">
+                <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Erros
+                </p>
+
+                <div className="mt-1 flex items-baseline gap-2">
+                  <p className="font-display text-2xl font-semibold text-destructive">
+                    {totalErros}
+                  </p>
+
+                  <p className="text-[10px] font-medium text-destructive">
+                    ({percentualErros.toFixed(1)}%)
+                  </p>
+                </div>
+              </div>
 
             </div>
-
           </div>
-
         </section>
-
 
         {/* =====================================================
             FILTROS
@@ -791,97 +838,7 @@ function HistoryPage() {
         </section>
 
 
-        {/* =====================================================
-            CARDS DE RESUMO
-        ===================================================== */}
-
-        <section className="mt-6 grid gap-4 md:grid-cols-3">
-
-
-          {/* TOTAL */}
-
-          <div className="rounded-2xl border border-border bg-card p-6">
-
-            <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-
-              Total de análises
-
-            </p>
-
-
-            <p className="mt-3 font-display text-4xl font-semibold text-foreground">
-
-              {totalAnalises}
-
-            </p>
-
-          </div>
-
-
-          {/* ACERTOS */}
-
-          <div className="rounded-2xl border border-border bg-card p-6">
-
-            <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-
-              Acertos
-
-            </p>
-
-
-            <div className="mt-3 flex items-end gap-3">
-
-              <p className="font-display text-4xl font-semibold text-live">
-
-                {totalAcertos}
-
-              </p>
-
-
-              <p className="pb-1 text-sm font-medium text-live">
-
-                ({percentualAcertos.toFixed(1)}%)
-
-              </p>
-
-            </div>
-
-          </div>
-
-
-          {/* ERROS */}
-
-          <div className="rounded-2xl border border-border bg-card p-6">
-
-            <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-
-              Erros
-
-            </p>
-
-
-            <div className="mt-3 flex items-end gap-3">
-
-              <p className="font-display text-4xl font-semibold text-destructive">
-
-                {totalErros}
-
-              </p>
-
-
-              <p className="pb-1 text-sm font-medium text-destructive">
-
-                ({percentualErros.toFixed(1)}%)
-
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
+        
         {/* =====================================================
             OBSERVAÇÃO
         ===================================================== */}
