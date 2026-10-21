@@ -8,6 +8,7 @@ import {
   type WeatherData,
 } from "../lib/conditions.ts";
 
+import { buildTemperatureToday, type TemperatureSeries } from "../lib/temperature-history.ts";
 import { buildHumidityAirAnalysis } from "../lib/humidity-air.ts";
 
 const numeric = z.number().finite();
@@ -54,6 +55,24 @@ const humiditySchema = z.object({
     })
     .refine((h) => h.time.length === h.relative_humidity_2m.length),
 });
+
+const temperatureHistorySchema = z.object({
+  timezone: z.literal(BRASILIA.timezone),
+  current: z.object({ time: timestamp }),
+  hourly_units: z.object({ temperature_2m: z.literal("°C") }),
+  hourly: z
+    .object({ time: z.array(timestamp), temperature_2m: z.array(temperature) })
+    .refine((h) => h.time.length === h.temperature_2m.length),
+});
+export function parseTemperatureToday(raw: unknown, now: number): TemperatureSeries {
+  const data = temperatureHistorySchema.parse(raw);
+  return buildTemperatureToday(
+    data.hourly.time,
+    data.hourly.temperature_2m,
+    now,
+    data.current.time,
+  );
+}
 
 export function parseHumidity(raw: unknown) {
   const data = humiditySchema.parse(raw);
@@ -110,7 +129,7 @@ export async function loadConditions(): Promise<ConditionsResponse> {
     current:
       "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day",
     daily: "temperature_2m_min,temperature_2m_max",
-    hourly: "relative_humidity_2m",
+    hourly: "relative_humidity_2m,temperature_2m",
     past_days: "30",
     temperature_unit: "celsius",
     wind_speed_unit: "kmh",
@@ -129,8 +148,14 @@ export async function loadConditions(): Promise<ConditionsResponse> {
     requestJson(airUrl).then((raw) => parseAir(raw, now)),
   ]);
   let weather: WeatherData | null = null;
+  let temperatureToday: TemperatureSeries | null = null;
   let humidity: ReturnType<typeof parseHumidity> | null = null;
   if (weatherResult.status === "fulfilled") {
+    try {
+      temperatureToday = parseTemperatureToday(weatherResult.value, now);
+    } catch {
+      /* O gráfico não interfere nos quadros ou na análise principal. */
+    }
     try {
       weather = parseWeather(weatherResult.value);
     } catch {
@@ -149,6 +174,7 @@ export async function loadConditions(): Promise<ConditionsResponse> {
     fetchedAt: now,
     weather,
     air,
+    temperatureToday,
     humidityAir:
       air && humidity
         ? buildHumidityAirAnalysis(air.series.month.points, humidity.times, humidity.values)

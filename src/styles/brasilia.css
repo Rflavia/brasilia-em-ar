@@ -1608,3 +1608,7 @@ html:has(.bea-site) {
     font-size: 29px;
   }
 }
+
+.bea-temp-history .bea-statistics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

@@ -1,3 +1,4 @@
+import type { TemperatureSeries } from "./temperature-history.ts";
 import type { HumidityAirAnalysis } from "./humidity-air.ts";
 
 export const BRASILIA = {
@@ -34,6 +35,7 @@ export type ConditionsResponse = {
   air: AirData | null;
   issues: string[];
   humidityAir: HumidityAirAnalysis | null;
+  temperatureToday: TemperatureSeries | null;
 };
 
 export function localDate(seconds: number): string {

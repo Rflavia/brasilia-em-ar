@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 import { Link } from "@tanstack/react-router";
-import { AirHistoryDisclosure } from "./air-history";
+import { TemperatureHistoryDisclosure } from "./temperature-history";
 import { HumidityAirChart } from "./humidity-air-analysis";
 
 import { useConditions } from "@/hooks/use-conditions";
@@ -418,7 +418,7 @@ export function BrasiliaConditionsPage() {
         {data && (
           <>
             <HumidityAirChart analysis={data.humidityAir} />
-            <AirHistoryDisclosure series={data.air?.series ?? null} />
+            <TemperatureHistoryDisclosure series={data.temperatureToday ?? null} />
           </>
         )}
       </main>
