@@ -13,9 +13,9 @@ import { AirHistory } from "./air-history";
 
 import { WEATHER_PREVIEW } from "@/mocks/weather-preview";
 
-function Brand({ footer = false }: { footer?: boolean }) {
+function Brand() {
   return (
-    <Link className={`bea-brand${footer ? " bea-brand-footer" : ""}`} to="/">
+    <Link className="bea-brand" to="/">
       <span className="bea-brand-mark" aria-hidden="true">
         <img src="/brasilia-em-ar.svg" width="42" height="42" alt="" />
       </span>
@@ -178,18 +178,6 @@ function ReadingGuide() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bea-footer">
-      <div className="bea-container bea-footer-inner">
-        <Brand footer />
-        <p>Clima. Ar. Cidade.</p>
-        <span>Projeto independente · versão demonstrativa</span>
-      </div>
-    </footer>
-  );
-}
-
 function CityIllustration() {
   return (
     <figure
@@ -278,7 +266,6 @@ export function BrasiliaHomePage() {
           <CityIllustration />
         </section>
       </main>
-      <Footer />
     </div>
   );
 }
@@ -299,7 +286,6 @@ export function BrasiliaConditionsPage() {
         <ReadingGuide />
         <AirHistory />
       </main>
-      <Footer />
     </div>
   );
 }
