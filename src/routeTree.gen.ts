@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalysisRouteImport } from './routes/analysis'
+import { Route as CondicoesRouteImport } from './routes/condicoes'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as OverviewRouteImport } from './routes/overview'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AnalysisRoute = AnalysisRouteImport.update({
   id: '/analysis',
   path: '/analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CondicoesRoute = CondicoesRouteImport.update({
+  id: '/condicoes',
+  path: '/condicoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DataRoute = DataRouteImport.update({
@@ -50,6 +56,7 @@ const ProfileRoute = ProfileRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analysis': typeof AnalysisRoute
+  '/condicoes': typeof CondicoesRoute
   '/data': typeof DataRoute
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analysis': typeof AnalysisRoute
+  '/condicoes': typeof CondicoesRoute
   '/data': typeof DataRoute
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analysis': typeof AnalysisRoute
+  '/condicoes': typeof CondicoesRoute
   '/data': typeof DataRoute
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
@@ -74,13 +83,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analysis' | '/data' | '/history' | '/overview' | '/profile'
+  fullPaths:
+    | '/'
+    | '/analysis'
+    | '/condicoes'
+    | '/data'
+    | '/history'
+    | '/overview'
+    | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analysis' | '/data' | '/history' | '/overview' | '/profile'
+  to:
+    | '/'
+    | '/analysis'
+    | '/condicoes'
+    | '/data'
+    | '/history'
+    | '/overview'
+    | '/profile'
   id:
     | '__root__'
     | '/'
     | '/analysis'
+    | '/condicoes'
     | '/data'
     | '/history'
     | '/overview'
@@ -90,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalysisRoute: typeof AnalysisRoute
+  CondicoesRoute: typeof CondicoesRoute
   DataRoute: typeof DataRoute
   HistoryRoute: typeof HistoryRoute
   OverviewRoute: typeof OverviewRoute
@@ -110,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/analysis'
       fullPath: '/analysis'
       preLoaderRoute: typeof AnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/condicoes': {
+      id: '/condicoes'
+      path: '/condicoes'
+      fullPath: '/condicoes'
+      preLoaderRoute: typeof CondicoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/data': {
@@ -146,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalysisRoute: AnalysisRoute,
+  CondicoesRoute: CondicoesRoute,
   DataRoute: DataRoute,
   HistoryRoute: HistoryRoute,
   OverviewRoute: OverviewRoute,
