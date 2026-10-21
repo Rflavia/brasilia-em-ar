@@ -160,3 +160,18 @@ export function AirHistory({ series: allSeries }: { series: Record<AirPeriod, Ai
     </section>
   );
 }
+
+export function AirHistoryDisclosure({ series }: { series: Record<AirPeriod, AirSeries> | null }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <details
+      className="bea-history-disclosure"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
+      <summary>
+        Consultar histórico de PM2.5 <span aria-hidden="true">↗</span>
+      </summary>
+      {open && <AirHistory series={series} />}
+    </details>
+  );
+}

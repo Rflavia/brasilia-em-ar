@@ -2,10 +2,13 @@ import { z } from "zod";
 import {
   BRASILIA,
   buildAirSeries,
+  localDate,
   type AirData,
   type ConditionsResponse,
   type WeatherData,
 } from "../lib/conditions.ts";
+
+import { buildHumidityAirAnalysis } from "../lib/humidity-air.ts";
 
 const numeric = z.number().finite();
 const temperature = numeric.min(-90).max(65).nullable();
@@ -41,10 +44,29 @@ const airSchema = z.object({
     .refine((h) => h.time.length === h.pm2_5.length),
 });
 
+const humiditySchema = z.object({
+  timezone: z.literal(BRASILIA.timezone),
+  hourly_units: z.object({ relative_humidity_2m: z.literal("%") }),
+  hourly: z
+    .object({
+      time: z.array(timestamp),
+      relative_humidity_2m: z.array(numeric.min(0).max(100).nullable()),
+    })
+    .refine((h) => h.time.length === h.relative_humidity_2m.length),
+});
+
+export function parseHumidity(raw: unknown) {
+  const data = humiditySchema.parse(raw);
+  return { times: data.hourly.time, values: data.hourly.relative_humidity_2m };
+}
+
 export function parseWeather(raw: unknown): WeatherData {
   const data = weatherSchema.parse(raw);
   const current = data.current;
   if (current.temperature_2m === null) throw new Error("Missing current temperature");
+  const todayIndex = data.daily.time.findIndex(
+    (time) => localDate(time) === localDate(current.time),
+  );
   return {
     time: current.time,
     temperature: current.temperature_2m,
@@ -53,8 +75,8 @@ export function parseWeather(raw: unknown): WeatherData {
     windSpeed: current.wind_speed_10m,
     code: current.weather_code,
     isDay: current.is_day === 1,
-    minimum: data.daily.temperature_2m_min[0] ?? null,
-    maximum: data.daily.temperature_2m_max[0] ?? null,
+    minimum: data.daily.temperature_2m_min[todayIndex] ?? null,
+    maximum: data.daily.temperature_2m_max[todayIndex] ?? null,
   };
 }
 export function parseAir(raw: unknown, now: number): AirData {
@@ -88,6 +110,8 @@ export async function loadConditions(): Promise<ConditionsResponse> {
     current:
       "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day",
     daily: "temperature_2m_min,temperature_2m_max",
+    hourly: "relative_humidity_2m",
+    past_days: "30",
     temperature_unit: "celsius",
     wind_speed_unit: "kmh",
   }).toString();
@@ -101,10 +125,23 @@ export async function loadConditions(): Promise<ConditionsResponse> {
   }).toString();
   const now = Math.floor(Date.now() / 1000);
   const [weatherResult, airResult] = await Promise.allSettled([
-    requestJson(weatherUrl).then(parseWeather),
+    requestJson(weatherUrl),
     requestJson(airUrl).then((raw) => parseAir(raw, now)),
   ]);
-  const weather = weatherResult.status === "fulfilled" ? weatherResult.value : null;
+  let weather: WeatherData | null = null;
+  let humidity: ReturnType<typeof parseHumidity> | null = null;
+  if (weatherResult.status === "fulfilled") {
+    try {
+      weather = parseWeather(weatherResult.value);
+    } catch {
+      /* Clima atual pode falhar independentemente do histórico. */
+    }
+    try {
+      humidity = parseHumidity(weatherResult.value);
+    } catch {
+      /* A consulta básica permanece disponível. */
+    }
+  }
   const air = airResult.status === "fulfilled" ? airResult.value : null;
   if (!weather && !air) throw new Error("Conditions providers unavailable");
   return {
@@ -112,9 +149,16 @@ export async function loadConditions(): Promise<ConditionsResponse> {
     fetchedAt: now,
     weather,
     air,
+    humidityAir:
+      air && humidity
+        ? buildHumidityAirAnalysis(air.series.month.points, humidity.times, humidity.values)
+        : null,
     issues: [
       ...(!weather ? ["Não foi possível carregar o clima."] : []),
       ...(!air ? ["Não foi possível carregar a qualidade do ar."] : []),
+      ...(weather && air && !humidity
+        ? ["O histórico de umidade está indisponível para a análise."]
+        : []),
     ],
   };
 }

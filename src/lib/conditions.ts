@@ -1,3 +1,5 @@
+import type { HumidityAirAnalysis } from "./humidity-air.ts";
+
 export const BRASILIA = {
   city: "Brasília",
   region: "Distrito Federal",
@@ -31,6 +33,7 @@ export type ConditionsResponse = {
   weather: WeatherData | null;
   air: AirData | null;
   issues: string[];
+  humidityAir: HumidityAirAnalysis | null;
 };
 
 export function localDate(seconds: number): string {
