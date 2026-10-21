@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   CloudSun,
   Droplets,
-  MapPin,
-  Menu,
-  Sun,
   Thermometer,
   Wind,
-  X,
 } from "lucide-react";
 
 import { Link } from "@tanstack/react-router";
@@ -18,16 +13,11 @@ import { AirHistory } from "./air-history";
 
 import { WEATHER_PREVIEW } from "@/mocks/weather-preview";
 
-const navigation = [
-  { href: "/", label: "Início" },
-  { href: "/condicoes", label: "Condições" },
-] as const;
-
 function Brand({ footer = false }: { footer?: boolean }) {
   return (
     <Link className={`bea-brand${footer ? " bea-brand-footer" : ""}`} to="/">
       <span className="bea-brand-mark" aria-hidden="true">
-        <Sun size={21} strokeWidth={1.5} />
+        <img src="/brasilia-em-ar.svg" width="42" height="42" alt="" />
       </span>
       <span>
         brasília <span className="bea-brand-end">em ar</span>
@@ -37,84 +27,11 @@ function Brand({ footer = false }: { footer?: boolean }) {
 }
 
 function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [headerHidden, setHeaderHidden] = useState(false);
-
-  useEffect(() => {
-    let lastScrollY = Math.max(0, window.scrollY);
-    const updateVisibility = () => {
-      const currentScrollY = Math.max(0, window.scrollY);
-      if (currentScrollY < 100) {
-        setHeaderHidden(false);
-        lastScrollY = currentScrollY;
-        return;
-      }
-      if (Math.abs(currentScrollY - lastScrollY) < 8) return;
-      setHeaderHidden(currentScrollY > lastScrollY);
-      lastScrollY = currentScrollY;
-    };
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    return () => window.removeEventListener("scroll", updateVisibility);
-  }, []);
-
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
-    };
-    document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
-  }, []);
-
   return (
-    <header className={`bea-header${headerHidden && !menuOpen ? " bea-header-hidden" : ""}`}>
-      <div className="bea-container bea-header-inner">
+    <header className="bea-masthead">
+      <div className="bea-container bea-masthead-inner">
         <Brand />
-        <nav className="bea-desktop-nav" aria-label="Navegação principal">
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              activeProps={{ "aria-current": "page" }}
-              activeOptions={{ exact: true }}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <span className="bea-location">
-          <MapPin size={14} aria-hidden="true" /> Brasília, DF
-        </span>
-        <button
-          className="bea-menu-button"
-          type="button"
-          aria-expanded={menuOpen}
-          aria-controls="bea-mobile-nav"
-          aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <X size={21} /> : <Menu size={21} />}
-        </button>
       </div>
-      {menuOpen && (
-        <nav
-          id="bea-mobile-nav"
-          className="bea-mobile-nav bea-container"
-          aria-label="Navegação para celular"
-        >
-          {navigation.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              activeProps={{ "aria-current": "page" }}
-              activeOptions={{ exact: true }}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </Link>
-          ))}
-        </nav>
-      )}
     </header>
   );
 }
