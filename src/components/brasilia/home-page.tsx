@@ -38,6 +38,24 @@ function Brand({ footer = false }: { footer?: boolean }) {
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = Math.max(0, window.scrollY);
+    const updateVisibility = () => {
+      const currentScrollY = Math.max(0, window.scrollY);
+      if (currentScrollY < 100) {
+        setHeaderHidden(false);
+        lastScrollY = currentScrollY;
+        return;
+      }
+      if (Math.abs(currentScrollY - lastScrollY) < 8) return;
+      setHeaderHidden(currentScrollY > lastScrollY);
+      lastScrollY = currentScrollY;
+    };
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", updateVisibility);
+  }, []);
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -48,7 +66,7 @@ function Header() {
   }, []);
 
   return (
-    <header className="bea-header">
+    <header className={`bea-header${headerHidden && !menuOpen ? " bea-header-hidden" : ""}`}>
       <div className="bea-container bea-header-inner">
         <Brand />
         <nav className="bea-desktop-nav" aria-label="Navegação principal">

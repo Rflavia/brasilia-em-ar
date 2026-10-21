@@ -80,6 +80,17 @@ html:has(.bea-site) {
   top: 0;
   z-index: 30;
   background: var(--bea-paper);
+  transition: transform 220ms ease;
+}
+
+.bea-header-hidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.bea-header-hidden:has(:focus-visible) {
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .bea-header-inner {
