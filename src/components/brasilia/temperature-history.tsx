@@ -127,10 +127,6 @@ export function TemperatureHistory({ series }: { series: TemperatureSeries | nul
           </details>
         </div>
       )}
-      <p className="bea-data-note">
-        Estimativas da Open-Meteo até o horário disponível, sem horas futuras. Os extremos
-        consideram apenas os valores já exibidos; lacunas indicam dados ausentes.
-      </p>
     </section>
   );
 }

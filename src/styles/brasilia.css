@@ -1618,6 +1618,6 @@ html:has(.bea-site) {
   padding-top: 12px;
 }
 .bea-dashboard > .bea-temp-history {
-  margin-top: 38px;
-  padding-bottom: 0;
+  margin-top: 0;
+  padding-bottom: 38px;
 }

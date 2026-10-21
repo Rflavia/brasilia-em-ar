@@ -6,7 +6,7 @@ Clima e qualidade do ar de Brasília em uma interface que reúne desenvolvimento
 
 A página inicial apresenta o projeto. Em **Condições**, o site consulta uma API própria (`GET /api/condicoes`) que reúne os dados de clima da Open-Meteo e as estimativas de PM2.5 do modelo global CAMS/Copernicus, distribuídas pela Open-Meteo. Não são medições de um sensor local nem um mapa de todo o Distrito Federal.
 
-Depois dos quadros atuais, o gráfico de temperatura mostra a evolução horária de hoje e os horários da maior e menor temperatura disponíveis. Após as explicações, o bloco recolhido “Explorar análise: umidade e partículas” investiga se dias mais secos também apresentam mais partículas, com uma dispersão de médias diárias. As estatísticas são calculadas sobre os valores disponíveis. A interface trata carregamento, falha parcial, indisponibilidade e dados desatualizados, sem substituir falhas por valores fictícios.
+Depois dos quadros atuais e das explicações, o gráfico de temperatura mostra a evolução horária de hoje e os horários da maior e menor temperatura disponíveis. Em seguida, o bloco recolhido “Explorar análise: umidade e partículas” investiga se dias mais secos também apresentam mais partículas, com uma dispersão de médias diárias. As estatísticas são calculadas sobre os valores disponíveis. A interface trata carregamento, falha parcial, indisponibilidade e dados desatualizados, sem substituir falhas por valores fictícios.
 
 ## Executar
 

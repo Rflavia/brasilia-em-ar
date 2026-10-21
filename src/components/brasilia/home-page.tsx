@@ -414,8 +414,8 @@ export function BrasiliaConditionsPage() {
             </p>
           </>
         )}
-        {data && <TemperatureHistory series={data.temperatureToday ?? null} />}
         <ReadingGuide />
+        {data && <TemperatureHistory series={data.temperatureToday ?? null} />}
         {data && <HumidityAirDisclosure analysis={data.humidityAir} />}
       </main>
     </div>
