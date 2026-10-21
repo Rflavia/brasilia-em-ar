@@ -251,7 +251,7 @@ export function BrasiliaHomePage() {
           <div className="bea-landing-copy">
             <p className="bea-eyebrow bea-intro-eyebrow">O pulso do céu da capital</p>
             <h1 id="bea-heading">
-              Brasília lá fora,
+              Brasília lá <span className="bea-title-f">f</span>ora,
               <br />
               <em>em perspectiva.</em>
             </h1>

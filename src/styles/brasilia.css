@@ -1259,3 +1259,9 @@ html:has(.bea-site) {
     height: 38px;
   }
 }
+
+/* Glifo de haste reta apenas no f do título da capa. */
+.bea-landing h1 .bea-title-f {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: normal;
+}
