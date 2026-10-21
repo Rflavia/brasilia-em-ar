@@ -1612,3 +1612,12 @@ html:has(.bea-site) {
 .bea-temp-history .bea-statistics {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+
+.bea-analysis-disclosure .bea-humidity-analysis {
+  border-top: 0;
+  padding-top: 12px;
+}
+.bea-dashboard > .bea-temp-history {
+  margin-top: 38px;
+  padding-bottom: 0;
+}

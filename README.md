@@ -6,7 +6,7 @@ Clima e qualidade do ar de Brasília em uma interface que reúne desenvolvimento
 
 A página inicial apresenta o projeto. Em **Condições**, o site consulta uma API própria (`GET /api/condicoes`) que reúne os dados de clima da Open-Meteo e as estimativas de PM2.5 do modelo global CAMS/Copernicus, distribuídas pela Open-Meteo. Não são medições de um sensor local nem um mapa de todo o Distrito Federal.
 
-A análise principal investiga se dias mais secos também apresentam mais partículas, com um gráfico de dispersão entre médias diárias de umidade e PM2.5. O bloco recolhido “Como a temperatura varia durante o dia?” exibe a evolução horária de hoje e os horários da maior e menor temperatura disponíveis. As estatísticas são calculadas sobre os valores disponíveis. A interface trata carregamento, falha parcial, indisponibilidade e dados desatualizados, sem substituir falhas por valores fictícios.
+Depois dos quadros atuais, o gráfico de temperatura mostra a evolução horária de hoje e os horários da maior e menor temperatura disponíveis. Após as explicações, o bloco recolhido “Explorar análise: umidade e partículas” investiga se dias mais secos também apresentam mais partículas, com uma dispersão de médias diárias. As estatísticas são calculadas sobre os valores disponíveis. A interface trata carregamento, falha parcial, indisponibilidade e dados desatualizados, sem substituir falhas por valores fictícios.
 
 ## Executar
 
@@ -37,7 +37,7 @@ npm.cmd run build
 
 ## Temperatura durante o dia
 
-O gráfico recolhido usa `temperature_2m` da mesma consulta de clima, sem criar outra requisição externa. Exibe somente horários de hoje até o menor entre o horário atual e a referência da fonte. A tabela preserva valores ausentes como lacunas. Os extremos indicam a maior e a menor temperatura **entre os horários disponíveis**, não a máxima ou mínima definitiva do dia; em caso de empate, mostram a primeira ocorrência. O eixo vertical acompanha a faixa de temperaturas e pode incluir valores negativos.
+O gráfico aberto usa `temperature_2m` da mesma consulta de clima, sem criar outra requisição externa. Exibe somente horários de hoje até o menor entre o horário atual e a referência da fonte. A tabela preserva valores ausentes como lacunas. Os extremos indicam a maior e a menor temperatura **entre os horários disponíveis**, não a máxima ou mínima definitiva do dia; em caso de empate, mostram a primeira ocorrência. O eixo vertical acompanha a faixa de temperaturas e pode incluir valores negativos.
 
 ## Análise de umidade × partículas
 
@@ -53,7 +53,7 @@ As cores dos pontos indicam menor ou maior PM2.5 **dentro do recorte exibido**, 
 - `src/services/conditions.server.ts`: consultas externas, validação de unidades e valores, falha parcial e cache.
 - `src/lib/conditions.ts`: contrato, fuso, séries temporais e estatísticas.
 - `src/lib/humidity-air.ts`: pareamento diário, correlação e interpretação exploratória.
-- `src/lib/temperature-history.ts` e `src/components/brasilia/temperature-history.tsx`: série de hoje e gráfico recolhido de temperatura.
+- `src/lib/temperature-history.ts` e `src/components/brasilia/temperature-history.tsx`: série de hoje e gráfico de temperatura.
 - `src/components/brasilia/humidity-air-analysis.tsx`: dispersão, resultado e tabela dos pares.
 - `src/hooks/use-conditions.ts`: consulta, atualização e estado da interface.
 - `src/components/brasilia/`: abertura, quadros e gráfico.

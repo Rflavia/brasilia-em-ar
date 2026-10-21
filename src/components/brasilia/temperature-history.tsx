@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Area,
   AreaChart,
@@ -12,7 +11,7 @@ import { summarizeSeries } from "@/lib/conditions";
 import type { TemperatureSeries } from "@/lib/temperature-history";
 const number = (value: number) => value.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
 
-function TemperatureHistory({ series }: { series: TemperatureSeries | null }) {
+export function TemperatureHistory({ series }: { series: TemperatureSeries | null }) {
   const stats = series ? summarizeSeries(series.points) : null;
   return (
     <section className="bea-history bea-temp-history" aria-labelledby="bea-temp-history-title">
@@ -133,19 +132,5 @@ function TemperatureHistory({ series }: { series: TemperatureSeries | null }) {
         consideram apenas os valores já exibidos; lacunas indicam dados ausentes.
       </p>
     </section>
-  );
-}
-export function TemperatureHistoryDisclosure({ series }: { series: TemperatureSeries | null }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <details
-      className="bea-history-disclosure"
-      onToggle={(event) => setOpen(event.currentTarget.open)}
-    >
-      <summary>
-        Como a temperatura varia durante o dia? <span aria-hidden="true">↗</span>
-      </summary>
-      {open && <TemperatureHistory series={series} />}
-    </details>
   );
 }

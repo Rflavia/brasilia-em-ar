@@ -236,3 +236,18 @@ export function HumidityAirChart({ analysis }: { analysis: HumidityAirAnalysis |
     </section>
   );
 }
+
+export function HumidityAirDisclosure({ analysis }: { analysis: HumidityAirAnalysis | null }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <details
+      className="bea-history-disclosure bea-analysis-disclosure"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
+      <summary>
+        Explorar análise: umidade e partículas <span aria-hidden="true">↗</span>
+      </summary>
+      {open && <HumidityAirChart analysis={analysis} />}
+    </details>
+  );
+}
