@@ -164,7 +164,10 @@ function CurrentConditions() {
             {weather.pm25.toLocaleString("pt-BR")}
             <span>µg/m³</span>
           </p>
-
+          <p className="bea-air-status">
+            <span aria-hidden="true" />
+            Concentração baixa neste momento
+          </p>
           <a href="#entenda" className="bea-air-link">
             O que esse número significa? <ArrowUpRight size={16} aria-hidden="true" />
           </a>
