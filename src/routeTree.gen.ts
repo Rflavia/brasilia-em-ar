@@ -16,6 +16,7 @@ import { Route as DataRouteImport } from './routes/data'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as OverviewRouteImport } from './routes/overview'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ApiCondicoesRouteImport } from './routes/api.condicoes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +53,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCondicoesRoute = ApiCondicoesRouteImport.update({
+  id: '/api/condicoes',
+  path: '/api/condicoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
   '/profile': typeof ProfileRoute
+  '/api/condicoes': typeof ApiCondicoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
   '/profile': typeof ProfileRoute
+  '/api/condicoes': typeof ApiCondicoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/history': typeof HistoryRoute
   '/overview': typeof OverviewRoute
   '/profile': typeof ProfileRoute
+  '/api/condicoes': typeof ApiCondicoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/overview'
     | '/profile'
+    | '/api/condicoes'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/overview'
     | '/profile'
+    | '/api/condicoes'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/history'
     | '/overview'
     | '/profile'
+    | '/api/condicoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   HistoryRoute: typeof HistoryRoute
   OverviewRoute: typeof OverviewRoute
   ProfileRoute: typeof ProfileRoute
+  ApiCondicoesRoute: typeof ApiCondicoesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/condicoes': {
+      id: '/api/condicoes'
+      path: '/api/condicoes'
+      fullPath: '/api/condicoes'
+      preLoaderRoute: typeof ApiCondicoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryRoute: HistoryRoute,
   OverviewRoute: OverviewRoute,
   ProfileRoute: ProfileRoute,
+  ApiCondicoesRoute: ApiCondicoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

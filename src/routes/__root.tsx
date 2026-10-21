@@ -81,7 +81,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Brasília em Ar — Clima, ar e cidade" },
       {
         name: "description",
-        content: "Clima e qualidade do ar no Distrito Federal. Prévia com dados ilustrativos.",
+        content:
+          "Clima e qualidade do ar no Distrito Federal. Dados de modelos meteorológicos e atmosféricos.",
       },
       { name: "author", content: "Brasília em Ar" },
       { property: "og:type", content: "website" },

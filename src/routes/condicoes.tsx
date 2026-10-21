@@ -8,7 +8,7 @@ export const Route = createFileRoute("/condicoes")({
       {
         name: "description",
         content:
-          "Clima, qualidade do ar e evolução de PM2.5 em Brasília. Demonstração com dados ilustrativos.",
+          "Clima, qualidade do ar e evolução de PM2.5 em Brasília. Estimativas atualizadas de modelos meteorológicos e atmosféricos.",
       },
     ],
   }),

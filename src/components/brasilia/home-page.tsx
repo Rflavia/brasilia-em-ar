@@ -3,6 +3,15 @@ import {
   ArrowRight,
   ArrowUpRight,
   CloudSun,
+  Cloud,
+  CloudRain,
+  CloudSnow,
+  CloudFog,
+  CloudMoon,
+  CloudLightning,
+  Moon,
+  Sun,
+  RefreshCw,
   Droplets,
   Thermometer,
   Wind,
@@ -11,7 +20,14 @@ import {
 import { Link } from "@tanstack/react-router";
 import { AirHistory } from "./air-history";
 
-import { WEATHER_PREVIEW } from "@/mocks/weather-preview";
+import { useConditions } from "@/hooks/use-conditions";
+import {
+  airStatus,
+  formatDataTime,
+  weatherDescription,
+  type ConditionsResponse,
+  type WeatherData,
+} from "@/lib/conditions";
 
 function Brand() {
   return (
@@ -36,55 +52,100 @@ function Header() {
   );
 }
 
-function CurrentConditions() {
-  const weather = WEATHER_PREVIEW;
+const displayValue = (value: number | null | undefined, digits = 0) =>
+  value == null ? "—" : value.toLocaleString("pt-BR", { maximumFractionDigits: digits });
 
+function WeatherSymbol({ weather }: { weather: WeatherData }) {
+  const code = weather.code ?? -1;
+  const Icon =
+    code >= 95
+      ? CloudLightning
+      : [71, 73, 75, 77, 85, 86].includes(code)
+        ? CloudSnow
+        : code >= 51
+          ? CloudRain
+          : [45, 48].includes(code)
+            ? CloudFog
+            : code === 3
+              ? Cloud
+              : code === 2
+                ? weather.isDay
+                  ? CloudSun
+                  : CloudMoon
+                : weather.isDay
+                  ? Sun
+                  : Moon;
+  return <Icon strokeWidth={1.1} />;
+}
+
+function CurrentConditions({ data }: { data: ConditionsResponse }) {
+  const weather = data.weather;
+  const air = data.air;
   return (
     <section id="agora" className="bea-conditions-section" aria-labelledby="bea-conditions-heading">
       <div className="bea-section-caption">
         <h2 id="bea-conditions-heading">Condições em Brasília</h2>
         <span>
-          <span className="bea-sample-dot" aria-hidden="true" /> Dados ilustrativos ·{" "}
-          {weather.timeLabel}
+          <span className="bea-sample-dot" aria-hidden="true" /> Estimativas de modelos · horário de
+          Brasília
         </span>
       </div>
       <div className="bea-conditions">
         <article className="bea-weather" aria-labelledby="bea-weather-heading">
           <div className="bea-weather-top">
             <div>
-              <p className="bea-eyebrow">{weather.region}</p>
+              <p className="bea-eyebrow">Distrito Federal</p>
               <h3 id="bea-weather-heading">Clima agora</h3>
             </div>
             <span className="bea-small-label">Clima</span>
           </div>
-          <div className="bea-temperature-row">
-            <p className="bea-temperature">
-              {weather.temperature}
-              <span>°C</span>
+          {weather ? (
+            <>
+              <div className="bea-temperature-row">
+                <p className="bea-temperature">
+                  {displayValue(weather.temperature)}
+                  <span>°C</span>
+                </p>
+                <div className="bea-weather-symbol" aria-hidden="true">
+                  <WeatherSymbol weather={weather} />
+                </div>
+              </div>
+              <p className="bea-weather-description">
+                {weatherDescription(weather.code, weather.isDay)}
+              </p>
+              <p className="bea-weather-feels">
+                Sensação de {displayValue(weather.feelsLike)}° <span aria-hidden="true">·</span>{" "}
+                Mín. {displayValue(weather.minimum)}° / Máx. {displayValue(weather.maximum)}°
+              </p>
+              <div className="bea-weather-details">
+                <div>
+                  <Droplets size={18} aria-hidden="true" />
+                  <span>
+                    Umidade{" "}
+                    <strong>
+                      {displayValue(weather.humidity)}
+                      {weather.humidity === null ? "" : "%"}
+                    </strong>
+                  </span>
+                </div>
+                <div>
+                  <Wind size={18} aria-hidden="true" />
+                  <span>
+                    Vento{" "}
+                    <strong>
+                      {displayValue(weather.windSpeed, 1)}
+                      {weather.windSpeed === null ? "" : " km/h"}
+                    </strong>
+                  </span>
+                </div>
+              </div>
+              <p className="bea-reference-time">Horário: {formatDataTime(weather.time)}</p>
+            </>
+          ) : (
+            <p className="bea-card-unavailable" role="status">
+              Clima indisponível no momento.
             </p>
-            <div className="bea-weather-symbol" aria-hidden="true">
-              <CloudSun strokeWidth={1.1} />
-            </div>
-          </div>
-          <p className="bea-weather-description">Sol entre nuvens</p>
-          <p className="bea-weather-feels">
-            Sensação de {weather.feelsLike}° <span aria-hidden="true">·</span> Mín.{" "}
-            {weather.minimum}° / Máx. {weather.maximum}°
-          </p>
-          <div className="bea-weather-details">
-            <div>
-              <Droplets size={18} aria-hidden="true" />
-              <span>
-                Umidade <strong>{weather.humidity}%</strong>
-              </span>
-            </div>
-            <div>
-              <Wind size={18} aria-hidden="true" />
-              <span>
-                Vento <strong>{weather.windSpeed} km/h</strong>
-              </span>
-            </div>
-          </div>
+          )}
           <div className="bea-weather-rings" aria-hidden="true" />
         </article>
         <article className="bea-air" aria-labelledby="bea-air-heading">
@@ -95,14 +156,24 @@ function CurrentConditions() {
             </span>
           </div>
           <h3 id="bea-air-heading">Qualidade do ar</h3>
-          <p className="bea-air-reading">
-            {weather.pm25.toLocaleString("pt-BR")}
-            <span>µg/m³</span>
-          </p>
-          <p className="bea-air-status">
-            <span aria-hidden="true" />
-            Concentração baixa neste momento
-          </p>
+          {air && air.pm25 !== null ? (
+            <>
+              <p className="bea-air-reading">
+                {displayValue(air.pm25, 1)}
+                <span>µg/m³</span>
+              </p>
+              <p className="bea-air-status">
+                <span aria-hidden="true" />
+                {airStatus(air.europeanPm25Index)}
+              </p>
+              <p className="bea-air-reference">Referência: faixa europeia de PM2.5</p>
+              <p className="bea-reference-time">Horário: {formatDataTime(air.time)}</p>
+            </>
+          ) : (
+            <p className="bea-card-unavailable" role="status">
+              Concentração atual indisponível.
+            </p>
+          )}
           <a href="#entenda" className="bea-air-link">
             O que esse número significa? <ArrowUpRight size={16} aria-hidden="true" />
           </a>
@@ -271,6 +342,12 @@ export function BrasiliaHomePage() {
 }
 
 export function BrasiliaConditionsPage() {
+  const { data, isPending, isFetching, isError, refetch } = useConditions();
+  const outdated =
+    data &&
+    [data.weather?.time, data.air?.time].some(
+      (time) => time !== undefined && Date.now() / 1000 - time > 10800,
+    );
   return (
     <div className="bea-site" id="inicio">
       <a href="#bea-main" className="bea-skip-link">
@@ -282,9 +359,62 @@ export function BrasiliaConditionsPage() {
           <ArrowLeft size={15} aria-hidden="true" /> Início
         </Link>
         <h1 className="bea-dashboard-title">Clima e qualidade do ar</h1>
-        <CurrentConditions />
+        <div className="bea-update-bar">
+          <p>{data ? `Consulta: ${formatDataTime(data.fetchedAt)}` : "Clima e ar para Brasília"}</p>
+          <button type="button" disabled={isFetching} onClick={() => void refetch()}>
+            <RefreshCw size={14} aria-hidden="true" />
+            {isFetching ? "Atualizando…" : "Atualizar"}
+          </button>
+        </div>
+        {isPending && (
+          <div className="bea-api-state" role="status" aria-live="polite">
+            Buscando clima e qualidade do ar…
+          </div>
+        )}
+        {isError && (
+          <p className="bea-api-message" role="alert">
+            {data
+              ? "Não foi possível atualizar. Exibindo os últimos dados consultados."
+              : "Não foi possível carregar os dados. Clique em Atualizar para tentar novamente."}
+          </p>
+        )}
+        {outdated && (
+          <p className="bea-api-message" role="status">
+            A fonte está com dados de mais de 3 horas atrás. Confira os horários de referência.
+          </p>
+        )}
+        {data && (
+          <>
+            {data.issues.length > 0 && (
+              <p className="bea-api-message" role="status">
+                {data.issues.join(" ")}
+              </p>
+            )}
+            <CurrentConditions data={data} />
+            <p className="bea-source-note">
+              Fontes:{" "}
+              <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">
+                Open-Meteo
+              </a>{" "}
+              e{" "}
+              <a href="https://atmosphere.copernicus.eu/" target="_blank" rel="noreferrer">
+                CAMS / Copernicus
+              </a>{" "}
+              ·{" "}
+              <a
+                href="https://creativecommons.org/licenses/by/4.0/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                CC BY 4.0
+              </a>
+              . Estimativas para a região, sem medição por sensor local. Médias calculadas pelo
+              projeto.
+            </p>
+          </>
+        )}
         <ReadingGuide />
-        <AirHistory />
+        {data && <AirHistory series={data.air?.series ?? null} />}
       </main>
     </div>
   );

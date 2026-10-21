@@ -1265,3 +1265,76 @@ html:has(.bea-site) {
   font-family: Georgia, "Times New Roman", serif;
   font-style: normal;
 }
+
+/* Estados da consulta e identificação das fontes, junto aos dados. */
+.bea-update-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  color: var(--bea-muted);
+  font-size: 11px;
+}
+.bea-update-bar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--bea-line);
+  padding: 8px 12px;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--bea-ink);
+  cursor: pointer;
+  min-height: 40px;
+}
+.bea-update-bar button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.bea-api-state {
+  border: 1px solid var(--bea-line);
+  border-radius: 8px;
+  background: var(--bea-pale);
+  padding: 42px 24px;
+  font-size: 14px;
+  color: var(--bea-muted);
+}
+.bea-api-message {
+  color: #785821;
+  background: #efe6d2;
+  font-size: 12px;
+  padding: 14px 18px;
+  margin-bottom: 18px !important;
+  border-radius: 5px;
+}
+.bea-reference-time {
+  font-size: 10px;
+  color: var(--bea-muted);
+  padding-bottom: 15px;
+  margin-top: 12px !important;
+}
+.bea-air .bea-reference-time {
+  color: #d2e0d9;
+  padding: 0;
+}
+.bea-air-reference {
+  font-size: 10px;
+  color: #d2e0d9;
+  margin-top: 6px !important;
+}
+.bea-source-note {
+  font-size: 11px;
+  color: var(--bea-muted);
+  line-height: 1.8;
+  margin-top: 14px !important;
+  max-width: 900px;
+}
+.bea-source-note a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.bea-card-unavailable {
+  padding-block: 35px;
+  font-size: 14px;
+}
