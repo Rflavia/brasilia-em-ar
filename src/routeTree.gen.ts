@@ -10,90 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AnalysisRouteImport } from './routes/analysis'
-import { Route as DataRouteImport } from './routes/data'
-import { Route as HistoryRouteImport } from './routes/history'
-import { Route as OverviewRouteImport } from './routes/overview'
-import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as CondicoesRouteImport } from './routes/condicoes'
+import { Route as ApiCondicoesRouteImport } from './routes/api.condicoes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnalysisRoute = AnalysisRouteImport.update({
-  id: '/analysis',
-  path: '/analysis',
+const CondicoesRoute = CondicoesRouteImport.update({
+  id: '/condicoes',
+  path: '/condicoes',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DataRoute = DataRouteImport.update({
-  id: '/data',
-  path: '/data',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HistoryRoute = HistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OverviewRoute = OverviewRouteImport.update({
-  id: '/overview',
-  path: '/overview',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+const ApiCondicoesRoute = ApiCondicoesRouteImport.update({
+  id: '/api/condicoes',
+  path: '/api/condicoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/analysis': typeof AnalysisRoute
-  '/data': typeof DataRoute
-  '/history': typeof HistoryRoute
-  '/overview': typeof OverviewRoute
-  '/profile': typeof ProfileRoute
+  '/condicoes': typeof CondicoesRoute
+  '/api/condicoes': typeof ApiCondicoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/analysis': typeof AnalysisRoute
-  '/data': typeof DataRoute
-  '/history': typeof HistoryRoute
-  '/overview': typeof OverviewRoute
-  '/profile': typeof ProfileRoute
+  '/condicoes': typeof CondicoesRoute
+  '/api/condicoes': typeof ApiCondicoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/analysis': typeof AnalysisRoute
-  '/data': typeof DataRoute
-  '/history': typeof HistoryRoute
-  '/overview': typeof OverviewRoute
-  '/profile': typeof ProfileRoute
+  '/condicoes': typeof CondicoesRoute
+  '/api/condicoes': typeof ApiCondicoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analysis' | '/data' | '/history' | '/overview' | '/profile'
+  fullPaths: '/' | '/condicoes' | '/api/condicoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analysis' | '/data' | '/history' | '/overview' | '/profile'
-  id:
-    | '__root__'
-    | '/'
-    | '/analysis'
-    | '/data'
-    | '/history'
-    | '/overview'
-    | '/profile'
+  to: '/' | '/condicoes' | '/api/condicoes'
+  id: '__root__' | '/' | '/condicoes' | '/api/condicoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AnalysisRoute: typeof AnalysisRoute
-  DataRoute: typeof DataRoute
-  HistoryRoute: typeof HistoryRoute
-  OverviewRoute: typeof OverviewRoute
-  ProfileRoute: typeof ProfileRoute
+  CondicoesRoute: typeof CondicoesRoute
+  ApiCondicoesRoute: typeof ApiCondicoesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -105,39 +68,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/analysis': {
-      id: '/analysis'
-      path: '/analysis'
-      fullPath: '/analysis'
-      preLoaderRoute: typeof AnalysisRouteImport
+    '/condicoes': {
+      id: '/condicoes'
+      path: '/condicoes'
+      fullPath: '/condicoes'
+      preLoaderRoute: typeof CondicoesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/data': {
-      id: '/data'
-      path: '/data'
-      fullPath: '/data'
-      preLoaderRoute: typeof DataRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/history': {
-      id: '/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof HistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/overview': {
-      id: '/overview'
-      path: '/overview'
-      fullPath: '/overview'
-      preLoaderRoute: typeof OverviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
+    '/api/condicoes': {
+      id: '/api/condicoes'
+      path: '/api/condicoes'
+      fullPath: '/api/condicoes'
+      preLoaderRoute: typeof ApiCondicoesRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -145,11 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AnalysisRoute: AnalysisRoute,
-  DataRoute: DataRoute,
-  HistoryRoute: HistoryRoute,
-  OverviewRoute: OverviewRoute,
-  ProfileRoute: ProfileRoute,
+  CondicoesRoute: CondicoesRoute,
+  ApiCondicoesRoute: ApiCondicoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

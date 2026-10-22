@@ -1,23 +1,24 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { BrasiliaHomePage } from "@/components/brasilia/home-page";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "NEXUS — Data Intelligence" },
-      { name: "description", content: "Monitoramento de resultados e análise de dados em tempo real." },
-      { property: "og:title", content: "NEXUS — Data Intelligence" },
-      { property: "og:description", content: "Monitoramento de resultados e análise de dados em tempo real." },
+      { title: "Brasília em Ar — Clima, ar e cidade" },
+      {
+        name: "description",
+        content:
+          "Um novo olhar para o clima e a qualidade do ar no Distrito Federal. Dados de modelos meteorológicos e atmosféricos.",
+      },
+      { property: "og:title", content: "Brasília em Ar — Clima, ar e cidade" },
+      {
+        property: "og:description",
+        content:
+          "Clima e qualidade do ar, traduzidos em informação para acompanhar a cidade e o seu dia. Dados de modelos meteorológicos e atmosféricos.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Index,
+  component: BrasiliaHomePage,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return <Navigate to="/overview" replace />;
-}
