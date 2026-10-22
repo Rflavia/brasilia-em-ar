@@ -13,6 +13,8 @@ A aplicação consulta `GET /api/condicoes`, servido pelo próprio TanStack Star
 - A fonte global CAMS tem resolução espacial aproximada de 45 km e resolução temporal nativa de 3 horas; os valores horários distribuídos pela API são estimativas do modelo. O passado disponibilizado pela API inclui previsões arquivadas, não observações validadas de estações.
 - Requisições às fontes têm prazo de 8 segundos. Cache por instância: 5 minutos em sucesso completo e 1 minuto em resposta parcial, com deduplicação de consultas simultâneas. Cache HTTP de até 5 minutos em sucesso completo; erros não são armazenados. A interface consulta novamente a cada 10 minutos enquanto está em uso e oferece atualização manual, respeitando o cache.
 
+Se a resposta da aplicação vier sem clima, o navegador tenta uma consulta direta à API pública de clima, sem chave. Essa alternativa usa a mesma URL, validação e cálculos do servidor e mantém os dados de qualidade do ar que já chegaram. Se a consulta direta também falhar, a interface preserva a resposta parcial. Não há repetição em loop; o resultado acompanha o cache e o intervalo de atualização da interface.
+
 ## Temperatura durante o dia
 
 O gráfico aberto usa `temperature_2m` da mesma consulta de clima, sem criar outra requisição externa. Exibe somente horários de hoje até o menor entre o horário atual e a referência da fonte. A tabela preserva valores ausentes como lacunas. Os extremos indicam a maior e a menor temperatura **entre os horários disponíveis**, não a máxima ou mínima definitiva do dia; em caso de empate, mostram a primeira ocorrência. O eixo vertical acompanha a faixa de temperaturas e pode incluir valores negativos.

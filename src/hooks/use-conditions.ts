@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ConditionsResponse } from "@/lib/conditions";
+import { withBrowserWeatherFallback } from "@/lib/weather-fallback";
 
 export function useConditions() {
   return useQuery({
@@ -10,7 +11,8 @@ export function useConditions() {
         headers: { Accept: "application/json" },
       });
       if (!response.ok) throw new Error("Não foi possível atualizar os dados. Tente novamente.");
-      return response.json();
+      const data: ConditionsResponse = await response.json();
+      return withBrowserWeatherFallback(data, signal);
     },
     staleTime: 300000,
     refetchInterval: 600000,

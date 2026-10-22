@@ -2,6 +2,8 @@
 
 Clima, qualidade do ar e análise de dados para Brasília. Uma aplicação que conecta APIs públicas a uma interface própria, com visualizações interativas e interpretação dos resultados.
 
+[**Acessar o site ↗**](https://brasilia-em-ar.rflavia279.chatgpt.site)
+
 ![Página inicial do Brasília em Ar](docs/images/inicio.png)
 
 ## Sobre o projeto
