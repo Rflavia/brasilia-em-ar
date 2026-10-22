@@ -96,14 +96,6 @@ html:has(.bea-site) {
   font-weight: 400;
 }
 
-.bea-intro {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  padding-block: 62px 43px;
-}
-
 .bea-eyebrow {
   font-size: 11px;
   font-weight: 500;
@@ -146,51 +138,8 @@ html:has(.bea-site) {
   line-height: 1.75;
 }
 
-.bea-primary-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 13px;
-  margin-top: 26px;
-  font-size: 13px;
-  font-weight: 500;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #b7c5be;
-}
-
-.bea-primary-link svg,
-.bea-air-link svg,
-.bea-project-copy a svg {
+.bea-air-link svg {
   transition: transform 160ms ease;
-}
-
-.bea-primary-link:hover svg {
-  transform: translateY(3px);
-}
-
-.bea-intro-aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 15px;
-  padding-bottom: 8px;
-}
-
-.bea-edition {
-  color: #677875;
-  font-family: "Fraunces", Georgia, serif;
-  font-size: 15px;
-  font-style: italic;
-  text-align: right;
-  max-width: 180px;
-}
-
-.bea-preview-badge {
-  color: #705923;
-  background: #f0e8d5;
-  padding: 7px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  white-space: nowrap;
 }
 
 .bea-section-caption {
@@ -423,20 +372,6 @@ html:has(.bea-site) {
   margin-block: 14px 26px;
 }
 
-.bea-pollutant-label {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-size: 12px;
-  letter-spacing: 0.6px;
-}
-
-.bea-pollutant-label span {
-  font-size: 11px;
-  letter-spacing: 0;
-  color: #bdd0ca;
-}
-
 .bea-air-reading {
   font-size: clamp(56px, 6vw, 72px);
   line-height: 1.15;
@@ -472,13 +407,6 @@ html:has(.bea-site) {
   align-self: center;
 }
 
-.bea-air-caption {
-  font-size: 11px;
-  color: #c3d5ce;
-  line-height: 1.8;
-  margin-top: 5px !important;
-}
-
 .bea-air-link {
   display: inline-flex;
   align-items: center;
@@ -489,16 +417,8 @@ html:has(.bea-site) {
   font-size: 11px;
 }
 
-.bea-air-link:hover svg,
-.bea-project-copy a:hover svg {
+.bea-air-link:hover svg {
   transform: translate(2px, -2px);
-}
-
-.bea-data-note {
-  color: #697873;
-  font-size: 11px;
-  margin-top: 12px !important;
-  line-height: 1.6;
 }
 
 .bea-reading-section {
@@ -508,8 +428,7 @@ html:has(.bea-site) {
   padding-block: 68px;
 }
 
-.bea-reading-intro h2,
-.bea-project h2 {
+.bea-reading-intro h2 {
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(29px, 3.2vw, 40px);
   font-weight: 400;
@@ -518,8 +437,7 @@ html:has(.bea-site) {
   margin-block: 14px 18px;
 }
 
-.bea-reading-intro > .bea-eyebrow,
-.bea-project .bea-eyebrow {
+.bea-reading-intro > .bea-eyebrow {
   color: #88703f;
 }
 
@@ -573,74 +491,6 @@ html:has(.bea-site) {
   padding-top: 3px;
 }
 
-.bea-project {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  border-top: 1px solid var(--bea-line);
-  padding-block: 42px 54px;
-}
-
-.bea-project h2 {
-  margin-bottom: 0;
-  font-size: 32px;
-}
-
-.bea-project-copy {
-  padding-top: 2px;
-}
-
-.bea-project-copy p {
-  color: var(--bea-muted);
-  font-size: 13px;
-  line-height: 1.9;
-}
-
-.bea-project-copy p + p {
-  margin-top: 12px;
-}
-
-.bea-project-copy a {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  margin-top: 18px;
-}
-
-.bea-footer-inner {
-  min-height: 98px;
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  border-top: 1px solid var(--bea-line);
-}
-
-.bea-brand-footer {
-  font-size: 16px;
-}
-
-.bea-brand-footer .bea-brand-mark {
-  width: 27px;
-  height: 27px;
-}
-
-.bea-brand-footer img {
-  width: 30px;
-  height: 30px;
-}
-
-.bea-footer-inner > p {
-  color: #6e7d77;
-  font-size: 11px;
-}
-
-.bea-footer-inner > span {
-  color: #6e7d77;
-  font-size: 10px;
-  margin-left: auto;
-}
-
 @media (min-width: 1600px) {
   .bea-container {
     max-width: 1240px;
@@ -650,10 +500,6 @@ html:has(.bea-site) {
 @media (max-width: 1000px) {
   .bea-container {
     width: calc(100% - 64px);
-  }
-
-  .bea-intro {
-    padding-top: 48px;
   }
 
   .bea-site h1 {
@@ -670,8 +516,7 @@ html:has(.bea-site) {
     flex-wrap: wrap;
   }
 
-  .bea-reading-section,
-  .bea-project {
+  .bea-reading-section {
     gap: 40px;
   }
 }
@@ -689,22 +534,6 @@ html:has(.bea-site) {
   .bea-brand-mark {
     width: 30px;
     height: 30px;
-  }
-
-  .bea-intro {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-block: 40px 32px;
-    gap: 23px;
-  }
-
-  .bea-intro-aside {
-    align-items: flex-start;
-    padding-bottom: 0;
-  }
-
-  .bea-edition {
-    display: none;
   }
 
   .bea-site h1 {
@@ -751,8 +580,7 @@ html:has(.bea-site) {
     font-size: 66px;
   }
 
-  .bea-reading-section,
-  .bea-project {
+  .bea-reading-section {
     grid-template-columns: 1fr;
     gap: 30px;
   }
@@ -767,17 +595,6 @@ html:has(.bea-site) {
 
   .bea-reading-intro h2 {
     font-size: 35px;
-  }
-
-  .bea-footer-inner {
-    padding-block: 22px;
-    flex-wrap: wrap;
-    gap: 12px 20px;
-  }
-
-  .bea-footer-inner > span {
-    flex-basis: 100%;
-    margin-left: 0;
   }
 }
 
@@ -854,10 +671,6 @@ html:has(.bea-site) {
     font-size: 25px;
   }
 
-  .bea-air-caption {
-    font-size: 11px;
-  }
-
   .bea-reading-intro h2 {
     font-size: 30px;
   }
@@ -868,14 +681,6 @@ html:has(.bea-site) {
 
   .bea-guide-number {
     display: none;
-  }
-
-  .bea-project h2 {
-    font-size: 30px;
-  }
-
-  .bea-footer-inner > p {
-    margin-left: auto;
   }
 }
 
@@ -1025,28 +830,6 @@ html:has(.bea-site) {
   color: var(--bea-muted);
   font-size: 13px;
   margin-top: 8px;
-}
-.bea-periods {
-  display: flex;
-  background: #eae9e1;
-  padding: 4px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-.bea-periods button {
-  min-height: 42px;
-  padding: 9px 15px;
-  font-size: 12px;
-  border: 0;
-  background: transparent;
-  color: var(--bea-muted);
-  border-radius: 4px;
-  cursor: pointer;
-}
-.bea-periods button[aria-pressed="true"] {
-  background: #fffefa;
-  color: var(--bea-ink);
-  box-shadow: 0 1px 4px #193b4312;
 }
 .bea-chart-card {
   background: #fffefa;
@@ -1242,10 +1025,6 @@ html:has(.bea-site) {
   display: block;
   width: 100%;
   height: 100%;
-}
-.bea-brand-footer .bea-brand-mark {
-  width: 30px;
-  height: 30px;
 }
 @media (max-width: 760px) {
   .bea-masthead-inner {

@@ -1,351 +1,40 @@
 @import "tailwindcss";
 @source "../src";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  --color-live: var(--live);
-
-  --color-data-red: var(--data-red);
-  --color-data-black: var(--data-black);
-  --color-data-white: var(--data-white);
-  --color-data-white-border: var(--data-white-border);
-
-  --font-sans: "Manrope", sans-serif;
-  --font-display: "Manrope", sans-serif;
-  --font-mono: "DM Mono", monospace;
-
-  --animate-fade-in: fade-in 300ms ease-out both;
-  --animate-slide-in-right: slide-in-right 350ms ease-out both;
+  --color-background: #f7f5ef;
+  --color-foreground: #193b43;
+  --color-primary: #214d57;
+  --color-primary-foreground: #f7f5ef;
+  --color-muted-foreground: #5c7073;
+  --color-input: #dedfd5;
+  --color-accent: #e8eeea;
+  --font-sans: "DM Sans", sans-serif;
 }
-
-
-/* =========================================================
-   IDENTIDADE VISUAL BOOT
-   ========================================================= */
-
-:root {
-
-  /* Cantos arredondados do protótipo */
-  --radius: 0.75rem;
-
-
-  /* ---------------------------------------------------------
-     FUNDO
-     Azul-marinho quase preto
-     --------------------------------------------------------- */
-
-  --background: #05101f;
-  --foreground: #f7f9ff;
-
-
-  /* ---------------------------------------------------------
-     CARDS
-     --------------------------------------------------------- */
-
-  --card: #0a192c;
-  --card-foreground: #f7f9ff;
-
-
-  /* ---------------------------------------------------------
-     MENUS / POPOVERS
-     --------------------------------------------------------- */
-
-  --popover: #0b1b30;
-  --popover-foreground: #f7f9ff;
-
-
-  /* ---------------------------------------------------------
-     AZUL OFICIAL BOOT
-     Usar SOMENTE como destaque
-     --------------------------------------------------------- */
-
-  --primary: #315cff;
-  --primary-foreground: #ffffff;
-
-
-  /* ---------------------------------------------------------
-     ÁREAS SECUNDÁRIAS
-     --------------------------------------------------------- */
-
-  --secondary: #0d1d32;
-  --secondary-foreground: #f7f9ff;
-
-
-  /* ---------------------------------------------------------
-     TEXTOS SECUNDÁRIOS
-     --------------------------------------------------------- */
-
-  --muted: #0a1728;
-  --muted-foreground: #8f9bb0;
-
-  /* ---------------------------------------------------------
-     HOVER / MENU ATIVO
-     --------------------------------------------------------- */
-
-  --accent: #102456;
-  --accent-foreground: #ffffff;
-
-
-  /* ---------------------------------------------------------
-     VERMELHO
-     --------------------------------------------------------- */
-
-  --destructive: #ed315c;
-  --destructive-foreground: #ffffff;
-
-
-  /* ---------------------------------------------------------
-     BORDAS
-     --------------------------------------------------------- */
-
-  --border: #1a2d49;
-  --input: #1b3151;
-
-  /* ---------------------------------------------------------
-     FOCO
-     --------------------------------------------------------- */
-
-  --ring: #315cff;
-
-
-  /* ---------------------------------------------------------
-     STATUS AO VIVO
-     --------------------------------------------------------- */
-
-  --live: #20d879;
-
-
-  /* ---------------------------------------------------------
-     CORES DOS RESULTADOS
-     --------------------------------------------------------- */
-
-  --data-red: #e52547;
-  --data-black: #101827;
-  --data-white: #f5f7fb;
-  --data-white-border: #8da0bd;
-}
-
-
-/* =========================================================
-   ANIMAÇÕES
-   ========================================================= */
-
-@keyframes fade-in {
-
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-}
-
-
-@keyframes slide-in-right {
-
-  from {
-    opacity: 0;
-    transform: translateX(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-}
-
-
-@keyframes live-pulse {
-
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-}
-
-
-@keyframes analysis-progress {
-
-  from {
-    transform: translateX(-100%);
-  }
-
-  to {
-    transform: translateX(0);
-  }
-
-}
-
-
-/* =========================================================
-   BASE
-   ========================================================= */
 
 @layer base {
-
-  * {
-    border-color: var(--color-border);
-  }
-
-
   html {
     background: var(--color-background);
   }
-
-
   body {
-
     margin: 0;
-
-    background-color: var(--color-background);
-
+    background: var(--color-background);
     color: var(--color-foreground);
-
     font-family: var(--font-sans);
-
-    letter-spacing: 0;
-
     font-synthesis: none;
-
   }
-
-
   button,
   a {
-
     -webkit-tap-highlight-color: transparent;
-
   }
-
-
-  ::selection {
-
-    background: var(--color-primary);
-
-    color: #ffffff;
-
-  }
-
 }
-
-
-/* =========================================================
-   UTILITÁRIOS
-   ========================================================= */
-
-@utility live-dot {
-
-  animation: live-pulse 2.2s ease-in-out infinite;
-
-}
-
-
-@utility analysis-progress {
-
-  animation: analysis-progress 1.35s ease-in-out both;
-
-}
-
-
-@utility scrollbar-none {
-
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-}
-
-
-/* =========================================================
-   ACESSIBILIDADE
-   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
-
     animation-duration: 0.01ms !important;
-
     animation-iteration-count: 1 !important;
-
     scroll-behavior: auto !important;
-
-  }
-
-}
-
-/* =========================================
-   TRANSIÇÃO 3D ENTRE PÁGINAS
-========================================= */
-
-@keyframes pageEnter3D {
-  0% {
-    opacity: 0;
-    transform: translate3d(70px, 0, 0) rotateY(-3deg);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) rotateY(0deg);
-  }
-}
-
-.page-enter {
-  transform-origin: left center;
-  animation: pageEnter3D 1800ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-enter {
-    animation: none;
   }
 }
