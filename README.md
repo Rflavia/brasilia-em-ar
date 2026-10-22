@@ -1,4 +1,4 @@
-# Brasília em Ar
+# Brasília em Ar · Clima e análise de dados
 
 Clima, qualidade do ar e análise de dados para Brasília. Uma aplicação que conecta APIs públicas a uma interface própria, com visualizações interativas e interpretação dos resultados.
 
