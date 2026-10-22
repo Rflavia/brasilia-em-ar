@@ -34,7 +34,7 @@ function Brand() {
   return (
     <Link className="bea-brand" to="/">
       <span className="bea-brand-mark" aria-hidden="true">
-        <img src="/brasilia-em-ar.svg" width="42" height="42" alt="" />
+        <img src={`${import.meta.env.BASE_URL}brasilia-em-ar.svg`} width="42" height="42" alt="" />
       </span>
       <span>
         brasília <span className="bea-brand-end">em ar</span>

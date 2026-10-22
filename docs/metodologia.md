@@ -13,7 +13,13 @@ A aplicação consulta `GET /api/condicoes`, servido pelo próprio TanStack Star
 - A fonte global CAMS tem resolução espacial aproximada de 45 km e resolução temporal nativa de 3 horas; os valores horários distribuídos pela API são estimativas do modelo. O passado disponibilizado pela API inclui previsões arquivadas, não observações validadas de estações.
 - Requisições às fontes têm prazo de 8 segundos. Cache por instância: 5 minutos em sucesso completo e 1 minuto em resposta parcial, com deduplicação de consultas simultâneas. Cache HTTP de até 5 minutos em sucesso completo; erros não são armazenados. A interface consulta novamente a cada 10 minutos enquanto está em uso e oferece atualização manual, respeitando o cache.
 
-Se a resposta da aplicação vier sem clima, o navegador tenta uma consulta direta à API pública de clima, sem chave. Essa alternativa usa a mesma URL, validação e cálculos do servidor e mantém os dados de qualidade do ar que já chegaram. Se a consulta direta também falhar, a interface preserva a resposta parcial. Não há repetição em loop; o resultado acompanha o cache e o intervalo de atualização da interface.
+## Consulta na versão pública
+
+Na interface publicada, o navegador consulta diretamente os dois endpoints públicos, sem chave: clima em `api.open-meteo.com` e qualidade do ar em `air-quality-api.open-meteo.com`. Assim, o limite de consultas não depende do IP compartilhado da hospedagem. As duas fontes são independentes: a falha de uma não apaga os dados válidos da outra. A validação e os cálculos são os mesmos do endpoint próprio.
+
+Cada fonte tem prazo de 12 segundos. O React Query reutiliza os resultados por 5 minutos e atualiza a cada 10 minutos, sem nova consulta automática ao voltar para a aba e sem repetição imediata após erro. A atualização manual continua disponível. A API externa ainda pode ficar indisponível ou atingir limites; nesse caso a interface apresenta a falha, sem inventar valores. O endpoint próprio e seu cache, descritos acima, permanecem disponíveis na versão com servidor.
+
+A publicação estática reutiliza os componentes existentes, com entrada `src/main.pages.tsx` e configuração `vite.pages.config.ts`. O caminho-base padrão é `/portfolio/brasilia-em-ar/`; pode ser definido por `PAGES_BASE` durante a compilação. A rota de condições recebe um arquivo HTML próprio para permitir acesso direto e recarregamento no GitHub Pages.
 
 ## Temperatura durante o dia
 
